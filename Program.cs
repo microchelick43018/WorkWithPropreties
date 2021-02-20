@@ -59,6 +59,7 @@ namespace WorkWithPropreties
                 }
             }
         }
+
         public int Y
         { 
             get => _y;

@@ -4,83 +4,65 @@ namespace WorkWithPropreties
 {
     class Program
     {
+        static int ReadPos()
+        {
+            int x;
+            bool isCorrected = int.TryParse(Console.ReadLine(), out x);
+            while (isCorrected == false || x < 0)
+            {
+                Console.WriteLine("Некорректный ввод. Повторите попытку: ");
+                isCorrected = int.TryParse(Console.ReadLine(), out x);
+            }
+            return x;
+        }
+
+        static char ReadSign()
+        {
+            char sign;
+            bool isCorrected = char.TryParse(Console.ReadLine(), out sign);
+            while (isCorrected == false)
+            {
+                Console.WriteLine("Некорректный ввод. Повторите попытку: ");
+                isCorrected = char.TryParse(Console.ReadLine(), out sign);
+            }
+            return sign;
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Введите координату игрока x: ");
-            int x = Convert.ToInt32(Console.ReadLine());
+            int x = ReadPos();
             Console.WriteLine("Введите координату игрока y: ");
-            int y = Convert.ToInt32(Console.ReadLine());
-            Position position = new Position(x, y);
+            int y = ReadPos();
             Console.WriteLine("Введите условное обозначение игрока: ");
-            ConsolePerson person = new ConsolePerson(Convert.ToChar(Console.ReadLine()), position);
-            person.DrawPerson();
+            char sign = ReadSign();
+            ConsolePerson person = new ConsolePerson(sign, x, y);
+            Drawer drawer = new Drawer();
+            drawer.DrawPerson(person);
         }
     }
 
     class ConsolePerson
     {
-        private char _sign;
-        private Position _position;
+        public char Sign { get; private set; }
+        public int PosX { get; private set; }
+        public int PosY { get; private set; }
 
-        public char Sign { get => _sign; private set => _sign = value; }
-        public Position Position { get => _position; private set => _position = value; }
-
-        public ConsolePerson(char sign, Position position)
+        public ConsolePerson(char sign, int posX, int posY)
         {
+            PosX = posX;
+            PosY = posY;
             Sign = sign;
-            Position = position;
         }
+    }
 
-        public void DrawPerson()
+    class Drawer
+    {
+        public void DrawPerson(ConsolePerson person)
         {
             Console.Clear();
-            Console.SetCursorPosition(Position.X, Position.Y);
-            Console.WriteLine(Sign);
+            Console.SetCursorPosition(person.PosX, person.PosY);
+            Console.WriteLine(person.Sign);
         }
     }
-
-    class Position
-    {
-        private int _x;
-        private int _y;
-
-        public int X
-        {
-            get => _x;
-            private set
-            {
-                if (value < 0)
-                {
-                    throw new Exception("отрицательная координата!");
-                }
-                else
-                {
-                    _x = value;
-                }
-            }
-        }
-
-        public int Y
-        { 
-            get => _y;
-            private set
-            {
-                if (value < 0)
-                {
-                    throw new Exception("отрицательная координата!");
-                }
-                else
-                {
-                    _y = value;
-                }
-            }
-        }
-
-        public Position(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-    }
-
 }
